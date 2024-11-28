@@ -711,7 +711,7 @@
                             "location": "[deployment().location]",
                             "properties": {
                                 "principalType": "ServicePrincipal",
-                                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '43d0d8ad-25c7-4714-9337-8ba259a9fe05')]", 
+                                "roleDefinitionId": "[tenantResourceId('Microsoft.Authorization/roleDefinitions', '43d0d8ad-25c7-4714-9337-8ba259a9fe05')]", 
                                 "principalId": "[reference(resourceId(parameters('managementSubscriptionId'), parameters('ALZMonitorResourceGroupName'), 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedManagedIdentityName')), '2023-01-31').principalId]",
                                 "description": "_deployed_by_amba"
                             }

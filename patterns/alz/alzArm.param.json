@@ -63,10 +63,10 @@
       "value": "No"
     },
     "bringYourOwnUserAssignedManagedIdentity": {
-      "value": "No"
+      "value": "Yes"
     },
     "bringYourOwnUserAssignedManagedIdentityResourceId": {
-      "value": ""
+      "value": "31321092-ec3c-41d7-8c0c-c1b697becb18"
     },
     "userAssignedManagedIdentityName": {
       "value": "id-amba-prod-001"
