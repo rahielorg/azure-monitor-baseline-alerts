@@ -1,7 +1,6 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    // MARK: Parameters
     "parameters": {
         "enterpriseScaleCompanyPrefix": {
             "type": "string",
@@ -426,7 +425,6 @@
             }
         }
     },
-    // MARK: Variables
     "variables": {
         "uamiParameters": {
             "ALZUserAssignedManagedIdentityName": {
@@ -496,7 +494,6 @@
                 "value": "[parameters('BYOAlertProcessingRule')]"
             }
         },
-        // Declaring the policy assignment parameters that will be used for all policy assignments
         "policyAssignmentParametersConnectivity": "[union(variables('policyAssignmentParametersCommon'), parameters('policyAssignmentParametersConnectivity'))]",
         "policyAssignmentParametersIdentity": "[union(variables('policyAssignmentParametersCommon'), parameters('policyAssignmentParametersIdentity'))]",
         "policyAssignmentParametersManagement": "[union(variables('policyAssignmentParametersCommon'), parameters('policyAssignmentParametersManagement'), variables('uamiParameters'))]",
@@ -510,7 +507,6 @@
         "policyAssignmentParametersStorage": "[union(variables('policyAssignmentParametersCommon'), parameters('policyAssignmentParametersStorage'))]",
         "policyAssignmentParametersVM": "[union(variables('policyAssignmentParametersCommon'), parameters('policyAssignmentParametersVM'),variables('uamiParameters'))]",
         "policyAssignmentParametersWeb": "[union(variables('policyAssignmentParametersMonitorDisable'), parameters('policyAssignmentParametersWeb'))]",
-        // Declaring all required deployment uri's used for deployments of composite ARM templates for ESLZ
         "deploymentUris": {
             "policyDefinitionsAutomation": "[uri(deployment().properties.templateLink.uri, 'policyDefinitions/policies-Automation.json')]",
             "policyDefinitionsCompute": "[uri(deployment().properties.templateLink.uri, 'policyDefinitions/policies-Compute.json')]",
@@ -540,7 +536,6 @@
             "AMBAVMInitiative": "[uri(deployment().properties.templateLink.uri, 'policyAssignments/DINE-VMAssignment.json')]",
             "AMBAWebInitiative": "[uri(deployment().properties.templateLink.uri, 'policyAssignments/DINE-WebAssignment.json')]"
         },
-        // Declaring deterministic deployment names
         "deploymentSuffix": "[concat('-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'), parameters('currentDateTimeUtcNow')))]",
         "deploymentNames": {
             "AMBAResourceGroupDeploymentName": "[take(concat('amba-rg', variables('deploymentSuffix')), 64)]",
@@ -604,8 +599,6 @@
         "cuaidWeb": "a80aedbd-3157-4335-94c7-7e7db459a647"
     },
     "resources": [
-        // MARK: Deploy RG
-        // Creating resource group in the Management subscription.
         {
             "condition": "[equals(parameters('bringYourOwnUserAssignedManagedIdentity'), 'No')]",
             "type": "Microsoft.Resources/deployments",
@@ -633,8 +626,6 @@
                 }
             }
         },
-        // MARK: Deploy UAMI
-        // Creating User Assigned Managed Identity for monitoring purpose using ARG query based alerts.
         {
             "condition": "[equals(parameters('bringYourOwnUserAssignedManagedIdentity'), 'No')]",
             "type": "Microsoft.Resources/deployments",
@@ -664,8 +655,6 @@
                 }
             }
         },
-        // MARK: Assign role
-        // Assigning Monitoring Reader role to the User Assigned Managed Identity at the pseudo root management group.
         {
             "condition": "[equals(parameters('bringYourOwnUserAssignedManagedIdentity'), 'No')]",
             "type": "Microsoft.Resources/deployments",
@@ -722,7 +711,7 @@
                             "location": "[deployment().location]",
                             "properties": {
                                 "principalType": "ServicePrincipal",
-                                "roleDefinitionId": "[tenantResourceId('Microsoft.Authorization/roleDefinitions', '43d0d8ad-25c7-4714-9337-8ba259a9fe05')]", // Monitoring Reader
+                                "roleDefinitionId": "[tenantResourceId('Microsoft.Authorization/roleDefinitions', '43d0d8ad-25c7-4714-9337-8ba259a9fe05')]", 
                                 "principalId": "[reference(resourceId(parameters('managementSubscriptionId'), parameters('ALZMonitorResourceGroupName'), 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedManagedIdentityName')), '2023-01-31').principalId]",
                                 "description": "_deployed_by_amba"
                             }
@@ -731,8 +720,6 @@
                 }
             }
         },
-        // MARK: Deploy Policies
-        // Automation Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -753,7 +740,6 @@
                 }
             }
         },
-        // Compute Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -774,7 +760,6 @@
                 }
             }
         },
-        // Hybrid Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -795,7 +780,6 @@
                 }
             }
         },
-        // Key Management Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -816,7 +800,6 @@
                 }
             }
         },
-        // Monitoring Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -837,7 +820,6 @@
                 }
             }
         },
-        // Network Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -858,7 +840,7 @@
                 }
             }
         },
-        // Notification-Assets Policy Definitions
+        
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -879,7 +861,7 @@
                 }
             }
         },
-        // Recovery Services Policy Definitions
+        
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -900,7 +882,6 @@
                 }
             }
         },
-        // ServiceHealth Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -921,7 +902,6 @@
                 }
             }
         },
-        // Storage Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -942,7 +922,6 @@
                 }
             }
         },
-        // Web Policy Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -963,7 +942,6 @@
                 }
             }
         },
-        // Policy Set Definitions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -996,8 +974,6 @@
                 }
             }
         },
-        // MARK: Delay
-        // Adding delay to ensure policy deployment is completed before policy assignments
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -1024,8 +1000,6 @@
                 }
             }
         },
-        // MARK: Assign Policies
-        // Assigning AMBA Connectivity PolicySet to the connectivity management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAConnectivity'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1052,7 +1026,6 @@
                 }
             }
         },
-        // Assigning AMBA Identity PolicySet to the Identity management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAIdentity'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1079,7 +1052,6 @@
                 }
             }
         },
-        // Assigning AMBA management PolicySet to the Management management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAManagement'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1113,7 +1085,6 @@
                 }
             }
         },
-        // Assigning AMBA service health PolicySet to the pseudo root management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAServiceHealth'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1140,7 +1111,6 @@
                 }
             }
         },
-        // Assigning AMBA notification assets PolicySet to the pseudo root management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBANotificationAssets'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1167,7 +1137,6 @@
                 }
             }
         },
-        // Assigning AMBA HybridVM PolicySet to the LandingZone management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAHybridVM'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1204,7 +1173,6 @@
                 }
             }
         },
-        // Assigning AMBA Key Management PolicySet to the Landing Zone management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAKeyManagement'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1231,7 +1199,6 @@
                 }
             }
         },
-        // Assigning AMBA Load Balancing PolicySet to the Landing Zone management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBALoadBalancing'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1258,7 +1225,6 @@
                 }
             }
         },
-        // Assigning AMBA Network Changes PolicySet to the Landing Zone management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBANetworkChanges'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1285,7 +1251,6 @@
                 }
             }
         },
-        // Assigning AMBA Recovery Services PolicySet to the Landing Zone management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBARecoveryServices'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1312,7 +1277,6 @@
                 }
             }
         },
-        // Assigning AMBA Storage PolicySet to the Landing Zone management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAStorage'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1339,7 +1303,6 @@
                 }
             }
         },
-        // Assigning AMBA VM PolicySet to the Landing Zone management group if condition is true
         {
             "condition": "[equals(parameters('enableAMBAVM'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1376,7 +1339,7 @@
                 }
             }
         },
-        // Assigning AMBA Web PolicySet to the Landing Zone group if condition is true
+        
         {
             "condition": "[equals(parameters('enableAMBAWeb'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
@@ -1403,8 +1366,8 @@
                 }
             }
         },
-        // MARK: Deploy telemetry
-        // Deploying general telemetry if not opted out and not deploying from ALZ Portal Accelerator
+        
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('deployALZPortalAccelerator'), 'No'))]",
             "apiVersion": "2020-06-01",
@@ -1420,7 +1383,7 @@
                 }
             }
         },
-        // Deploying connectivity PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAConnectivity'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1436,7 +1399,7 @@
                 }
             }
         },
-        // Deploying identity PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAIdentity'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1452,7 +1415,7 @@
                 }
             }
         },
-        // Deploying management PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAManagement'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1468,7 +1431,7 @@
                 }
             }
         },
-        // Deploying HybridVM PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAHybridVM'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1484,7 +1447,7 @@
                 }
             }
         },
-        // Deploying service health PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAServiceHealth'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1500,7 +1463,7 @@
                 }
             }
         },
-        // Deploying notification assets PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBANotificationAssets'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1516,7 +1479,7 @@
                 }
             }
         },
-        // Deploying Key Management PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAKeyManagement'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1532,7 +1495,7 @@
                 }
             }
         },
-        // Deploying Load Balancing PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBALoadBalancing'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1548,7 +1511,7 @@
                 }
             }
         },
-        // Deploying Network Changes PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBANetworkChanges'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1564,7 +1527,7 @@
                 }
             }
         },
-        // Deploying Recovery Services PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBARecoveryServices'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1580,7 +1543,7 @@
                 }
             }
         },
-        // Deploying Storage PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAStorage'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1596,7 +1559,7 @@
                 }
             }
         },
-        // Deploying VM PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAVM'), 'Yes'))]",
             "apiVersion": "2020-06-01",
@@ -1612,7 +1575,7 @@
                 }
             }
         },
-        // Deploying Web PolicySet telemetry if not opted out
+        
         {
             "condition": "[and(equals(parameters('telemetryOptOut'), 'No'), equals(parameters('enableAMBAWeb'), 'Yes'))]",
             "apiVersion": "2020-06-01",
