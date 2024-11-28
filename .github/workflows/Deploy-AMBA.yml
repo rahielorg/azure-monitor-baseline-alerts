@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 env:
-  Location: "norwayeast"
+  Location: "northeurope"
   ManagementGroupPrefix: "CAF"
 
 jobs:
