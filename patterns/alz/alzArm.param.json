@@ -39,25 +39,25 @@
       "value": "Yes"
     },
     "enableAMBAKeyManagement": {
-      "value": "Yes"
+      "value": "No"
     },
     "enableAMBALoadBalancing": {
-      "value": "Yes"
+      "value": "No"
     },
     "enableAMBANetworkChanges": {
       "value": "No"
     },
     "enableAMBARecoveryServices": {
-      "value": "Yes"
+      "value": "No"
     },
     "enableAMBAStorage": {
-      "value": "Yes"
+      "value": "No"
     },
     "enableAMBAVM": {
       "value": "Yes"
     },
     "enableAMBAWeb": {
-      "value": "Yes"
+      "value": "No"
     },
     "telemetryOptOut": {
       "value": "No"
