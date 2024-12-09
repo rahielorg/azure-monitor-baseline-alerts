@@ -6,19 +6,19 @@
       "value": "CAF"
     },
     "platformManagementGroup": {
-      "value": "CAF"
+      "value": "CAF-platform"
     },
     "IdentityManagementGroup": {
-      "value": "CAF"
+      "value": "CAF-identity"
     },
     "managementManagementGroup": {
-      "value": "CAF"
+      "value": "CAF-management"
     },
     "connectivityManagementGroup": {
-      "value": "CAF"
+      "value": "CAF-connectivity"
     },
     "LandingZoneManagementGroup": {
-      "value": "CAF"
+      "value": "CAF-landingzones"
     },
     "enableAMBAConnectivity": {
       "value": "Yes"
